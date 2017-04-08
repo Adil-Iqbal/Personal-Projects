@@ -125,7 +125,7 @@ function Board(index, x, y, size) {
                 this.col.b = 170;
             }
         }
-        return this.col
+        return this.col;
     };
 
 
@@ -142,10 +142,10 @@ function Board(index, x, y, size) {
         var randomIndex = floor(random(0, emptyTiles.length));
         var randomTile = emptyTiles[randomIndex];
         this.board[randomTile].state = computer;
-        if (!first) {
-            this.switchTurn();
-        } else {
+        if (first) {
             this.turn = human
+        } else {
+            this.switchTurn();
         }
     };
 
@@ -154,7 +154,7 @@ function Board(index, x, y, size) {
     this.endGame = function() {
         var winIndex = this.checkForWin(this.board, false, returnIndex = true);
         stroke(this.col.r - 40, this.col.g - 40, this.col.b - 40);
-        var lineThickness = map(this.size, 25, 200, 1, 5)
+        var lineThickness = map(this.size, 25, 200, 1, 5);
         strokeWeight(lineThickness); 
         switch (winIndex) {
             case 0:
@@ -195,7 +195,7 @@ function Board(index, x, y, size) {
         }
         // If the node is NOT terminal, create a child node and continue evaluating the search tree.
         var maxValue = -999;
-        var index = null
+        var index = null;
         for (var i = 0; i < emptyTiles.length; i++) {
             var childNode = this.createChildNode(node, emptyTiles[i], computer);
             var value = this.humanValue(childNode, depth++, a, b);
