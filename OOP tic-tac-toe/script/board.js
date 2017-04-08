@@ -1,36 +1,36 @@
 function Board(index, x, y, size) {
     // Parameter variables.
-    this.index = index;
-    this.x = x;
-    this.y = y;
-    this.size = size;
-
+    this.index = index;                 // Position of the board in the 'games' array.
+    this.x = x;                         // The position of the board on the X-axis.
+    this.y = y;                         // The position of the board on the Y-axis.
+    this.size = size;                   // The size of the board.
     // Rendering Variables.
-    this.pad = this.size * 0.167; // Thickness of lines.
-    this.w = this.size + this.pad;
-    this.h = this.w;
-    this.bounds = {
+    this.pad = this.size * 0.167;       // Thickness of the # lines.
+    this.w = this.size + this.pad;      // The total width of the board.
+    this.h = this.w;                    // The total height of the board.
+    this.bounds = {                     // The edges of the board.
         posX: this.x + (this.w / 2),
         negX: this.x - (this.w / 2),
         posY: this.y + (this.h / 2),
         negY: this.y - (this.h / 2)
     };
-    this.swapSymbols = false;
-    this.col = {
+    this.swapSymbols = false;           // Determines who gets 'X' and who gets 'O'.
+    this.col = {                        // Contains the RGB values comprising the color of the board.
         r: 0,
         g: 0,
         b: 0
     };
     // Tracking variables.
-    this.board = [];
-    this.turn = null;
-    this.gameOn = false;
-    this.gameOver = false;
-    this.result = null;
-    this.maxDepth = 15;
-    this.blunder;
+    this.board = [];                    // Contains the tiles of the board. 
+    this.turn = null;                   // Tracks who's turn it is.
+    this.gameOn = false;                // Tracks whether the game is idle or active.
+    this.gameOver = false;              // Tracks if the game has concluded.
+    this.result = null;                 // Tracks the result of a concluded game.
+    this.maxDepth = 15;                 // Limits the size of the search tree.
+    this.blunder;                       // Chance that the computer has to make a mistake.
 
 
+    // Sets up the game board.
     this.initialize = function() {
         // Set turn by coin toss.
         if (random(1) > 0.5) {
@@ -66,7 +66,8 @@ function Board(index, x, y, size) {
         }
     };
 
-
+    
+    // Displays the game board.
     this.show = function() {
         // Setup
         this.col = this.setColor();
@@ -91,15 +92,16 @@ function Board(index, x, y, size) {
         }
     };
 
-
+    
+    // Changes color of the board based on the game's progress.
     this.setColor = function() {
-        // Game is waiting...
+        // Game is waiting.
         if (this.gameOn == false) {
             this.col.r = 150;
             this.col.g = 150;
             this.col.b = 150;
         }
-        // Game is in progress.
+        // Game is being played.
         if (this.gameOn == true && this.gameOver == false) {
             this.col.r = 0;
             this.col.g = 0;
@@ -148,11 +150,12 @@ function Board(index, x, y, size) {
     };
 
 
+    // Draws the appropriate line if a player meets the win condition.
     this.endGame = function() {
         var winIndex = this.checkForWin(this.board, false, returnIndex = true);
         stroke(this.col.r - 40, this.col.g - 40, this.col.b - 40);
         var lineThickness = map(this.size, 25, 200, 1, 5)
-        strokeWeight(lineThickness); // WIP (map to padding)
+        strokeWeight(lineThickness); 
         switch (winIndex) {
             case 0:
                 line(this.bounds.negX, this.board[0].y, this.bounds.posX, this.board[2].y);
@@ -181,14 +184,16 @@ function Board(index, x, y, size) {
         }
     };
 
-
+    // Builds the search tree required to find the most optimal move.
     this.compValue = function(node, depth = 0, a = -999, b = 999, first = true) {
         var emptyTiles = this.getEmptyTiles(node);
         var winner = this.checkForWin(node, returnPlayer = true);
+        // If the node is terminal, return the score for the node.
         var terminal = this.isTerminalNode(depth, emptyTiles, winner);
         if (typeof terminal == 'number') {
             return terminal;
         }
+        // If the node is NOT terminal, create a child node and continue evaluating the search tree.
         var maxValue = -999;
         var index = null
         for (var i = 0; i < emptyTiles.length; i++) {
@@ -198,6 +203,7 @@ function Board(index, x, y, size) {
                 maxValue = value;
                 index = emptyTiles[i];
             }
+            // Do not search through unecessary branches of the search tree.
             if (value > a) {
                 a = value;
             }
@@ -209,6 +215,7 @@ function Board(index, x, y, size) {
                 }
             }
         }
+        // If this is the root of the search tree, return an index instead of a score.
         if (first) {
             return index;
         } else {
@@ -217,7 +224,9 @@ function Board(index, x, y, size) {
     };
 
 
+    // This function is run between each move.
     this.switchTurn = function() {
+        // Checks if the game has concluded.
         var emptyTiles = this.getEmptyTiles(this.board);
         var winner = this.checkForWin(this.board, returnPlayer = true);
         if (typeof winner == 'number') {
@@ -232,12 +241,15 @@ function Board(index, x, y, size) {
             this.gameOver = true;
             this.result = 'draw';
         } else {
+            // If no conclusion is found, switch the turn.
             this.turn *= -1;
         }
+        // Essentially runs the "this.show()" function.
         redraw();
     };
 
 
+    // Returns an array of the indices of all empty tiles.
     this.getEmptyTiles = function(onBoard) {
         var emptyTiles = [];
         for (var i = 0; i < onBoard.length; i++) {
@@ -251,6 +263,7 @@ function Board(index, x, y, size) {
     };
 
 
+    // Evaluates the given game board and determines if anyone has won. 
     this.checkForWin = function(onBoard = board, returnPlayer = false, returnIndex = false) {
         var space1, space2, space3;
         for (var i = 0; i < winConditions.length; i++) {
@@ -277,6 +290,7 @@ function Board(index, x, y, size) {
     };
 
 
+    // Checks to see if a node in the search tree is terminal. Returns a score for terminal nodes.
     this.isTerminalNode = function(depth, emptyTiles, winner) {
         if (depth > this.maxDepth || emptyTiles.length == 0 || typeof winner == "number") {
             if (emptyTiles.length == 0 && typeof winner != "number") {
@@ -290,6 +304,7 @@ function Board(index, x, y, size) {
     };
 
 
+    // Creates a new node in the search tree.
     this.createChildNode = function(parentNode, emptyTileIndex, thisTurn) {
         var childNode = [];
         for (var i = 0; i < parentNode.length; i++) {
@@ -304,13 +319,16 @@ function Board(index, x, y, size) {
     };
 
 
+    // Also builds the search tree required to find the most optimal move.
     this.humanValue = function(node, depth = 0, a, b) {
         var emptyTiles = this.getEmptyTiles(node);
         var winner = this.checkForWin(node, returnPlayer = true);
+        // If the node is terminal, return the score for the node.
         var terminal = this.isTerminalNode(depth, emptyTiles, winner);
         if (typeof terminal == 'number') {
             return terminal;
         }
+        // If the node is NOT terminal, create a child node and continue evaluating the search tree.
         var minValue = 999;
         for (var i = 0; i < emptyTiles.length; i++) {
             var childNode = this.createChildNode(node, emptyTiles[i], human);
@@ -318,6 +336,7 @@ function Board(index, x, y, size) {
             if (value < minValue) {
                 minValue = value;
             }
+            // Do not search through unnecessary branches of the search tree. 
             if (value < b) {
                 b = value;
             }
@@ -329,12 +348,18 @@ function Board(index, x, y, size) {
     };
 
 
+    // Dictates the behavior of the board when it is clicked by the human player.
     this.clicked = function() {
         if (!this.gameOver) {
-            if (mouseX < this.bounds.posX && mouseX > this.bounds.negX && mouseY < this.bounds.posY && mouseY > this.bounds.negY) {
+            if (mouseX < this.bounds.posX && 
+                mouseX > this.bounds.negX && 
+                mouseY < this.bounds.posY && 
+                mouseY > this.bounds.negY) {
+                // Changes the color of an inactive board.
                 if (this.gameOn == false) {
                     this.gameOn = true;
                 }
+                // Tells the game tiles that the board has been clicked.
                 for (var i = 0; i < this.board.length; i++) {
                     this.board[i].clicked();
                 }
