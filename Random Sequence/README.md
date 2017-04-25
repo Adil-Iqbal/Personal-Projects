@@ -2,7 +2,7 @@
 
 ###### by Adil Iqbal
 
-## Introduction
+### Introduction
 The **randomSeq** function is a flexible learning tool for Biopython. It is used to generate a Seq object of any length, using any IUPAC alphabet from the biopython module. This function has utility for those students who either do not yet know how to query data from online databases or who simply do not have access to an internet connection.
 
 ### Installatiion
@@ -14,7 +14,7 @@ from rseq import randomSeq
 
 ### Usage
 
-Once you have access, to the function, use it on your learning adventures!
+Once you have access to the function, use it on your learning adventures! The function returns a Seq object that you can set to any variable. You can then use Biopython to perform all operations on it as usual.
 
 ![Common Usage](http://i.imgur.com/Lh118fz.jpg "Common Usage")
 
