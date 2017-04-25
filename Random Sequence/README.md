@@ -21,8 +21,9 @@ Once you have access, to the function, use it on your learning adventures!
 ### Arguments
 The **randomSeq** function takes two arguments, the first one is for the **length of the sequence** that you are requesting and a second one for the **alphabet** that you would like your sequence to use.
 
-#### Any IUPAC alphabet can be called.
-The full list as of April 24th, 2017 is as follows:
+#### Supported Alphabets
+
+All IUPAC alphabets are supported. The full list as of April 24th, 2017 is as follows:
 - Unambiguous DNA
 - Ambiguous DNA
 - Extended DNA
@@ -33,14 +34,20 @@ The full list as of April 24th, 2017 is as follows:
 
 ![IUPAC Alphabet](http://i.imgur.com/Y36aYvE.jpg "IUPAC Alphabet")
 
-#### Both of these arguments are optional.
+#### Optional Arguments
 
 If left undeclared, the **length of the sequence** is chosen randomly between 1 and 100.  If left undeclared, the **alphabet of the sequence** defaults to **Unambiguous DNA**.
 
 ![Arguments Optional](http://i.imgur.com/oj0cwNc.jpg "Arguments Optional")
 
-#### Size is always truncated to a multiple of three (3).
+#### Multiple of 3.
 
-This feature makes it easier to perform translations operations on your sequences.
+The size parameter is always truncated to a multiple of three (3). This feature makes it easier to perform translations operations on your sequences.
 
 ![Truncate to 3](http://i.imgur.com/Nr6CfnR.jpg "Truncate to 3")
+
+#### Parameter Validation
+
+Both parameters are validated for an easier debugging experience!
+
+![Validation](http://i.imgur.com/31Bhnax.jpg "Validation")
