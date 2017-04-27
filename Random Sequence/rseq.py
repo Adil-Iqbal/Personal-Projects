@@ -77,7 +77,7 @@ def validateLang(lang):
         print('Language parameter of \'randomSeq\' must be a valid IUPAC alphabet.')
         raise TypeError
 
-
+# Determines the correct codon table, and populate codon sets.
 class CodonSets:
     def __init__(self, lang, _table):
         self.lang = lang
