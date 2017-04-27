@@ -29,11 +29,10 @@ The **randomSeq** function takes several arguments. Below is a sequential list o
 The corresponding subsection below details the behavior of these arguements.
 
 #### Size Parameter
-The size argument is an optional parameter that denotes the **length of sequence** that is returned by the function. If the size parameter remains undeclared, a sequence of randomly chosen length (between 6 and 100) will be returned. 
+The *size* parameter is an optional parameter that denotes the **length of sequence** that is returned by the function. If the size parameter remains undeclared, a sequence of randomly chosen length (between 6 and 100) will be returned. 
 
 ![Using the size parameter](http://i.imgur.com/E4RbfEQ.jpg)
-*In the example above, the "my_seq1" object has a constant length of 12 because the size parameter was declared by the user, while the "my_seq2" object has a sequence of random length because the size parameter was not declared.
-*
+*In the example above, the "my_seq1" object has a constant length of 12 because the size parameter was declared by the user, while the "my_seq2" object has a sequence of random length because the size parameter was not declared.*
 
 The size parameter is **truncated to a multiple of three (3) for all non-protein alphabets.** This is done to ensure that all translation operations proceed without error.
 
@@ -42,7 +41,7 @@ The size parameter is **truncated to a multiple of three (3) for all non-protein
 
 #### Supported Alphabets
 
-As you may have guessed, this function can generate sequences based on the alphabet that is declared in the "lang" parameter.  If left undeclared, the alphabet of the sequence defaults to **Unambiguous DNA**. All IUPAC alphabets are supported. The full list as of April 24th, 2017 is as follows:
+As you may have guessed, this function can generate sequences based on the alphabet that is declared in the *lang* parameter.  If left undeclared, the alphabet of the sequence defaults to **Unambiguous DNA**. All IUPAC alphabets are supported. The full list as of April 24th, 2017 is as follows:
 - Unambiguous DNA
 - Ambiguous DNA
 - Extended DNA
@@ -56,14 +55,14 @@ As you may have guessed, this function can generate sequences based on the alpha
 
 #### Bookend Parameter
 
-The bookend parameter is set to True by default.  When the bookend parameter is True, the generated sequence will always begin with start codon (or corresponding amino acid) and always end with a stop codon.  
+The *bookend* parameter is set to True by default.  When the bookend parameter is True, the generated sequence will always begin with start codon (or corresponding amino acid) and always end with a stop codon.  
 
 ![Bookend Example](http://i.imgur.com/9DjEhbE.jpg "Bookend Example")
 *In the above example, we see that all sequences are generated using unambiguous DNA and then translated to show us the amino acids that are being encoded. In the control group, the "bookend" parameter is set to False. The resulting sequences have neither a start codon or a stop codon. Whereas in the experimental group (that have the "bookend" paramter set to True), we see that each sequence begins with a Leucine (L) or Methionine (M) amino acid, both of which happen to be encoded by a start codon. Each sequence in the experimental group ends in a stop codon, denoted by the astrisks. In this example, codons were defined based on the Standard NCBI Codon Table.*
 
 #### Persistent Parameter
 
-The persistent parameter is set to True by default. When the persistent parameter is True, the generated sequence will not contain a stop codon ***within*** the sequence.
+The *persistent* parameter is set to True by default. When the persistent parameter is True, the generated sequence will not contain a stop codon ***within*** the sequence.
 
 ![Persistent Example](http://i.imgur.com/mAers4P.jpg "Persistent Example")
 *In the above example, we see that all sequences are generated using unambiguous DNA and then translated to show us the amino acids that are being encoded. In the control group, the "persistent" parameter is set to False. The resulting sequences are littered with stop codons (as denoted by asterisks) throughout. In the experimental group, the "persistent" parameter is set to True, and we do not see any stop codons (as denoted by asterisks) **within** the sequences except, of course, for the stop codons at the end of the sequences. In this example, codons were defined based on the Standard NCBI Codon Table.*
