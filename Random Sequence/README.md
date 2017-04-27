@@ -37,6 +37,7 @@ The *size* parameter is an optional parameter that denotes the **length of seque
 The size parameter is **truncated to a multiple of three (3) for all non-protein alphabets.** This is done to ensure that all translation operations proceed without error.
 
 ![Size truncation](http://i.imgur.com/p9xw5Yt.jpg "Size truncation")
+
 *In the example above, different sizes are tested to observe behavior. In Group A, the declared size is a multiple of three (3), so its length was expressed in the sequence without truncation. In Group B, the declared sizes were **not** a multiple of three (3), so they were truncated to allow for translation. In Group C, the declared sizes were also **not** a multiple of three (3), but since they are both proteins (therefore, cannot be translated), truncation did not occur.*
 
 #### Supported Alphabets
@@ -72,6 +73,7 @@ The *persistent* parameter is set to True by default. When the persistent parame
 By altering the *table* parameter, all codons will be generated based on the codon table of your choosing. The default value is set to 1, which denotes the Standard NCBI Codon Table. 
 
 To learn more about these codon tables, you can visit: **[The Genetic Codes](https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi "The Genetic Codes")**
+
 Alternatively, you can take a peek at the Biopython source code repository: **[Codon Table File](https://github.com/biopython/biopython/blob/master/Bio/Data/CodonTable.py "Codon Table File")** (relavent code begins on line 477)
 
 ![Table Example](http://i.imgur.com/7cDnPtY.jpg "Table Example")
