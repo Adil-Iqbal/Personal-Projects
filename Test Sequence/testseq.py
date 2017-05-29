@@ -208,6 +208,7 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None, pe
         persistent = True
     if persistent or from_start or to_stop:
         stop_symbol = str(stop_symbol)[0]
+        table = int(table)
         codon_set = _CodonSet(alphabet, table, stop_symbol)
     if gc_target is not None and not typeof.protein:
         gc_target = int(gc_target)
