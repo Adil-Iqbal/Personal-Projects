@@ -1,5 +1,7 @@
-# Test Sequence
-# by Adil Iqbal
+# Copyright 2017 by Adil Iqbal.
+# All rights reserved.
+
+"""Provide a tool for testing/demonstrating a Seq object"""
 
 import warnings
 import random
@@ -54,14 +56,14 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
         - rand_seed - The seed used to generate the randomized sequence.
         This argument accepts any hashable data value as the seed. If the
         argument is set to None, the sequence will be re-seeded with every
-        function call. 
+        function call.
 
     Hey there! We can use the 'testseq' function to quickly generate sequences:
 
-    >>> from Scripts import testseq
+    >>> from Scripts.testseq import testseq
     >>> my_seq = testseq()
     >>> my_seq
-    Seq('ATGGTGTTTGCACCAACAATACTATCGTAA', IUPACUnambiguousDNA())
+    Seq('ATGTCCTCTAATAGTATGGTCGTCTACTGA', IUPACUnambiguousDNA())
 
     The default size of the generated sequence is 30 letters,
     but you can change that at any time, like so:
@@ -181,7 +183,7 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
     >>> a == b
     False
 
-    If you'd like to generate a specific sequence, you can set the 
+    If you'd like to generate a specific sequence, you can set the
     'rand_seed' argument to any desired hashable data value:
 
     >>> a = testseq(rand_seed=9001)
@@ -312,8 +314,8 @@ def _add_messenger_parts(seq, size, alphabet, codon_set):
         if len(utr5) >= 3 and len(utr5) % 3 == 0:
             # Replace start codons with non-start codons.
             this_codon = utr5[-3:]
-            for startCodon in codon_set.start:
-                if this_codon == startCodon:
+            for start_codon in codon_set.start:
+                if this_codon == start_codon:
                     roll = seeded_instance.randint(0, len(codon_set.nonstart) - 1)
                     new_codon = codon_set.nonstart[roll]
                     utr5 = utr5[:-3] + new_codon
@@ -424,3 +426,10 @@ class _Letter(object):
 
     def __repr__(self):
         return "<" + str(self.letter) + " : " + str(self.probability_value) + ">"
+
+
+if __name__ == "__main__":
+    print("Running doctests...")
+    import doctest
+    doctest.testmod()
+    print("Done")
