@@ -57,11 +57,11 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
 
     Hey there! We can use the 'testseq' function to quickly generate sequences:
 
-    >>> from Scripts.testseq import testseq
-    >>> my_seq = testseq(seed=0)
+    >>> from testseq import testseq
+    >>> my_seq = testseq(rand_seed=0)
     >>> my_seq
     Seq('ATGTCCTCTAATAGTATGGTCGTCTACTGA', IUPACUnambiguousDNA())
-    
+
     (Note: We set seed=0 to ensure repeatability for doctests - this is normally
     not required.)
 
@@ -77,7 +77,7 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
     >>> from Bio.Alphabet import IUPAC
     >>> my_seq = testseq(alphabet=IUPAC.extended_protein)
     >>> my_seq
-    Seq('MUQCKTSPOLSNWHTFLFUEYOKVZOYFL*', HasStopCodon(ExtendedIUPACProtein(), '*'))
+    Seq('MTXADSMPIQCWUCQDKHJMGEGOZNAIC*', HasStopCodon(ExtendedIUPACProtein(), '*'))
 
     You may have noticed that the above sequence starts with Methionine(M) and
     ends in an asterisk(*). That's because of the two arguments 'from_start'
@@ -90,19 +90,19 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
 
     >>> my_seq = testseq(table=5)
     >>> my_seq
-    Seq('ATGTCCTCTAATAGTATGGTCGTCTACTAA', IUPACUnambiguousDNA())
+    Seq('ATGAGCAGCGAAACCCGCACGTGTTTCTAA', IUPACUnambiguousDNA())
 
     Now we can translate our sequence with ease!
 
     >>> my_seq.translate(table=6)
-    Seq('MSSNSMVVYQ', IUPACProtein())
+    Seq('MSSETRTCFQ', IUPACProtein())
 
     Oops! We're missing a stop codon. We've generated a sequence using Table 5,
     but translated it using Table 6. Those tables don't share a common stop codon!
     Let's fix that...
 
     >>> my_seq.translate(table=5)
-    Seq('MSSNSMVVY*', HasStopCodon(IUPACProtein(), '*'))
+    Seq('MSSETRTCF*', HasStopCodon(IUPACProtein(), '*'))
 
     That's better!
 
@@ -113,7 +113,7 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
     >>> my_seq = testseq(gc_target=60)
     >>> from Bio.SeqUtils import GC
     >>> GC(my_seq)
-    50.0
+    40.0
 
     What happened? Note that in the above example, the sequence is at the
     default size of 30 letters. Since the sequence is generated letter by letter,
@@ -122,7 +122,7 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
 
     >>> my_seq = testseq(size=10000, gc_target=60)
     >>> GC(my_seq)
-    61.37613761376138
+    60.876087608760876
 
     Much better! It's also worth noting that the 'gc_target' argument is ignored
     when generating protein sequences.
@@ -156,10 +156,10 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
 
     >>> my_seq = testseq(300, alphabet=IUPAC.unambiguous_rna, messenger=True)
     >>> len(my_seq)
-    561
+    588
 
     Notice that the sequence requested was 300 letters, however the final length of
-    the sequence is 561 letters. Those extra letters are the mRNA components. The
+    the sequence is 588 letters. Those extra letters are the mRNA components. The
     generated sequence is buried in there, somewhere - and it's exactly 300 letters in size!
 
     Lastly, lets discuss the sequence generator itself. The sequence is created
