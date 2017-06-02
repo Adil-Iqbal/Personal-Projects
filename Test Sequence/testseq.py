@@ -271,6 +271,7 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
         seq = _add_messenger_parts(seq, size, alphabet, codon_set)
     if typeof.protein and stop_symbol in seq:
         alphabet = Alphabet.HasStopCodon(alphabet, stop_symbol)
+    random_instance.seed(None)
     return Seq(seq, alphabet)
 
 
