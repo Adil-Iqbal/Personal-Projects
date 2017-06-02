@@ -4,7 +4,7 @@
 """Provide a tool for testing/demonstrating a Seq object"""
 
 import warnings
-import random
+from random import Random
 
 from Bio.Seq import Seq
 from Bio import Alphabet
@@ -12,13 +12,12 @@ from Bio.Alphabet import IUPAC
 from Bio.Data import CodonTable
 from Bio import BiopythonWarning
 
-anchor_instance = random.Random()
-seeded_instance = random.Random()
+random_instance = Random()
 
 
 def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
             persistent=True, from_start=True, to_stop=True, stop_symbol="*",
-            truncate=True, messenger=False, rand_seed=0):
+            truncate=True, messenger=False, rand_seed=None):
     """Generate and return a Seq object.
 
     This function will generate and return a custom Seq object
@@ -54,16 +53,17 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
         any RNA sequence generated will additionally have a 5'-UTR,
         3'-UTR, and a poly-A tail.
         - rand_seed - The seed used to generate the randomized sequence.
-        This argument accepts any hashable data value as the seed. If the
-        argument is set to None, the sequence will be re-seeded with every
-        function call.
+        This argument accepts any hashable data value as the seed.
 
     Hey there! We can use the 'testseq' function to quickly generate sequences:
 
     >>> from Scripts.testseq import testseq
-    >>> my_seq = testseq()
+    >>> my_seq = testseq(seed=0)
     >>> my_seq
     Seq('ATGTCCTCTAATAGTATGGTCGTCTACTGA', IUPACUnambiguousDNA())
+    
+    (Note: We set seed=0 to ensure repeatability for doctests - this is normally
+    not required.)
 
     The default size of the generated sequence is 30 letters,
     but you can change that at any time, like so:
@@ -168,20 +168,26 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
 
     Lets look at an example:
 
-    >>> a = testseq()
-    >>> b = testseq()
+    >>> a = testseq(rand_seed=0)
+    >>> b = testseq(rand_seed=0)
     >>> a == b
     True
 
     Since sequence "a" and sequence "b" were both generated using the same seed,
-    they ended up being the exact same sequence. We can change that behavior
-    to shuffle the seed every time the function is called by setting the
-    the 'rand_seed' argument to 'None' (without quotation marks), like so:
+    they ended up being the exact same sequence. Normally, if we wanted a repeatable
+    run of generated sequences, we would only seed at the start. This ensures that
+    we get different sequences each time, but we can retrieve the same set of sequences
+    if we run the program again (or if we re-seed the random number generator with the
+    same seed):
 
-    >>> a = testseq(rand_seed=None)
-    >>> b = testseq(rand_seed=None)
+    >>> a = testseq(rand_seed=0)
+    >>> b = testseq()
     >>> a == b
     False
+    >>> c = testseq(rand_seed=0)
+    >>> d = testseq()
+    >>> b == d
+    True
 
     If you'd like to generate a specific sequence, you can set the
     'rand_seed' argument to any desired hashable data value:
@@ -195,10 +201,8 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
     Contribution by Adil Iqbal (2017).
     """
     # Set seed, gather data, clean-up logic, validate arguments.
-    global anchor_instance, seeded_instance
-    if rand_seed is None:
-        rand_seed = anchor_instance.random()
-    seeded_instance.seed(rand_seed)
+    if rand_seed is not None:
+        random_instance.seed(rand_seed)
     typeof = _SeqType(alphabet)
     if not typeof.rna and messenger:
         warnings.warn("Argument 'messenger' can only be used with an RNA alphabet.", BiopythonWarning)
@@ -232,13 +236,13 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
         if gc_target is not None and not typeof.protein:
             seq += _pick_one(probability_table)
         else:
-            roll = seeded_instance.randint(0, len(alphabet.letters) - 1)
+            roll = random_instance.randint(0, len(alphabet.letters) - 1)
             seq += alphabet.letters[roll]
         if len(seq) >= 3 and len(seq) % 3 == 0 and not typeof.protein and persistent:
             # Replace stop codons with non-stop codons.
             this_codon = seq[-3:]
             if this_codon in codon_set.stop:
-                roll = seeded_instance.randint(0, len(codon_set.nonstop) - 1)
+                roll = random_instance.randint(0, len(codon_set.nonstop) - 1)
                 new_codon = codon_set.nonstop[roll]
                 seq = seq[:-3] + new_codon
     # Additional processing of generated sequence.
@@ -256,11 +260,11 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
         if aug is not None and aug in codon_set.start:
             start = aug
         else:
-            roll = seeded_instance.randint(0, len(codon_set.start) - 1)
+            roll = random_instance.randint(0, len(codon_set.start) - 1)
             start = codon_set.start[roll]
         seq = start + seq[x:]
     if to_stop:
-        roll = seeded_instance.randint(0, len(codon_set.stop) - 1)
+        roll = random_instance.randint(0, len(codon_set.stop) - 1)
         stop = codon_set.stop[roll]
         seq = seq[:-x] + stop
     if messenger:
@@ -293,8 +297,7 @@ def _construct_probability_table(alphabet, gc_target):
 
 def _pick_one(probability_table):
     """Choose a nucleotide based on its probability of being chosen. (PRIVATE)"""
-    global seeded_instance
-    roll = seeded_instance.random()
+    roll = random_instance.random()
     index = 0
     while roll > 0:
         roll -= probability_table[index].probability_value
@@ -305,26 +308,25 @@ def _pick_one(probability_table):
 
 def _add_messenger_parts(seq, size, alphabet, codon_set):
     """Generate and add the 5' UTR, 3' UTR, and PolyA-Tail to an RNA sequence. (PRIVATE)"""
-    global seeded_instance
     utr_size = int(size / 3)
     utr5 = ""
     for i in range(utr_size):
-        roll = seeded_instance.randint(0, len(alphabet.letters) - 1)
+        roll = random_instance.randint(0, len(alphabet.letters) - 1)
         utr5 += alphabet.letters[roll]
         if len(utr5) >= 3 and len(utr5) % 3 == 0:
             # Replace start codons with non-start codons.
             this_codon = utr5[-3:]
             for start_codon in codon_set.start:
                 if this_codon == start_codon:
-                    roll = seeded_instance.randint(0, len(codon_set.nonstart) - 1)
+                    roll = random_instance.randint(0, len(codon_set.nonstart) - 1)
                     new_codon = codon_set.nonstart[roll]
                     utr5 = utr5[:-3] + new_codon
                     break
     utr3 = ""
     for i in range(utr_size):
-        roll = seeded_instance.randint(0, len(alphabet.letters) - 1)
+        roll = random_instance.randint(0, len(alphabet.letters) - 1)
         utr3 += alphabet.letters[roll]
-    roll = seeded_instance.randint(50, 101)
+    roll = random_instance.randint(50, 101)
     poly_a_tail = "A" * roll
     seq = utr5 + seq + utr3 + poly_a_tail
     while len(seq) % 3 != 0:
