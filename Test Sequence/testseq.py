@@ -17,7 +17,7 @@ random_instance = Random()
 
 def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
             persistent=True, from_start=True, to_stop=True, stop_symbol="*",
-            truncate=True, messenger=False, rand_seed=None):
+            truncate=True, messenger=False, rand_seed=0):
     """Generate and return a Seq object.
 
     This function will generate and return a custom Seq object
