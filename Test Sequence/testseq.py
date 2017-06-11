@@ -6,7 +6,6 @@
 
 """Provide a tool for testing/demonstrating a Seq object."""
 
-import sys
 import warnings
 from random import Random
 
