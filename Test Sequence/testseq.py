@@ -6,6 +6,7 @@
 
 """Provide a tool for testing/demonstrating a Seq object."""
 
+from __future__ import division
 import warnings
 from random import Random
 
@@ -61,12 +62,12 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
         argument is set to None, the sequence will be re-seeded with every
         function call.
 
-    Hey there! We can use the 'testseq' function to quickly generate sequences:
+    Hey there! We can use the 'testseq' function to quickly generate sequences.
 
     >>> from Scripts.testseq import testseq
     >>> my_seq = testseq()
-    >>> my_seq
-    Seq('ATGTCCTCTAATAGTATGGTCGTCTACTGA', IUPACUnambiguousDNA())
+    >>> type(my_seq)
+    <class 'Bio.Seq.Seq'>
 
     The default size of the generated sequence is 30 letters,
     but you can change that at any time, like so:
@@ -79,34 +80,42 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
 
     >>> from Bio.Alphabet import IUPAC
     >>> my_seq = testseq(alphabet=IUPAC.extended_protein)
-    >>> my_seq
-    Seq('MUQCKTSPOLSNWHTFLFUEYOKVZOYFL*', HasStopCodon(ExtendedIUPACProtein(), '*'))
+    >>> my_seq.alphabet
+    HasStopCodon(ExtendedIUPACProtein(), '*')
 
-    You may have noticed that the above sequence starts with Methionine(M) and
+    Please notice below that this sequence starts with Methionine(M) and
     ends in an asterisk(*). That's because of the two arguments 'from_start'
     and 'to_stop' respectively. Curiously, there are no asterisks (or terminators)
     within the sequence either; this is due to the 'persistent' argument.
+
+    >>> my_seq[0]
+    'M'
+    >>> my_seq[-1]
+    '*'
+    >>> "*" in my_seq[1:-1]
+    False
+
     The 'from_start', 'to_stop', and 'persistent' arguments are all set to True
     by default. You can read more about what they do in the "Arguments" section
     above. It's useful to note that all three of those arguments involve the use
     of codon tables! When generating your sequence, you can set which codon table
     you'd like to use:
 
-    >>> my_seq = testseq(table=5)
-    >>> my_seq
-    Seq('ATGTCCTCTAATAGTATGGTCGTCTACTAA', IUPACUnambiguousDNA())
+    >>> my_seq1 = testseq(table=5)
 
     Now we can translate our sequence with ease!
 
-    >>> my_seq.translate(table=6)
-    Seq('MSSNSMVVYQ', IUPACProtein())
+    >>> my_seq2 = my_seq1.translate(table=6)
+    >>> my_seq2.alphabet
+    IUPACProtein()
 
     Oops! We're missing a stop codon. We've generated a sequence using Table 5,
     but translated it using Table 6. Those tables don't share a common stop codon!
     Let's fix that...
 
-    >>> my_seq.translate(table=5)
-    Seq('MSSNSMVVY*', HasStopCodon(IUPACProtein(), '*'))
+    >>> my_seq2 = my_seq1.translate(table=5)
+    >>> my_seq2.alphabet
+    HasStopCodon(IUPACProtein(), '*')
 
     That's better!
 
@@ -116,17 +125,19 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
 
     >>> my_seq = testseq(gc_target=60)
     >>> from Bio.SeqUtils import GC
-    >>> GC(my_seq)
-    50.0
+    >>> error = 60 - GC(my_seq)
+    >>> -5 < error < 5
+    False
 
     What happened? Note that in the above example, the sequence is at the
     default size of 30 letters. Since the sequence is generated letter by letter,
     larger sequences will have a tendency to be closer to the desired GC-content
     than smaller sequences. Let's try that again with a much larger sequence:
 
-    >>> my_seq = testseq(size=10000, gc_target=60)
-    >>> GC(my_seq)
-    61.37613761376138
+    >>> my_seq = testseq(10000, gc_target=60)
+    >>> error = 60 - GC(my_seq)
+    >>> -5 < error < 5
+    True
 
     Much better! It's also worth noting that the 'gc_target' argument is ignored
     when generating protein sequences.
@@ -159,11 +170,13 @@ def testseq(size=30, alphabet=IUPAC.unambiguous_dna, table=1, gc_target=None,
     the sequence addtionally. Let's look at an example:
 
     >>> my_seq = testseq(300, alphabet=IUPAC.unambiguous_rna, messenger=True)
-    >>> len(my_seq)
-    561
+    >>> len(my_seq) == 300
+    False
+    >>> len(my_seq) > 400
+    True
 
     Notice that the sequence requested was 300 letters, however the final length of
-    the sequence is 561 letters. Those extra letters are the mRNA components. The
+    the sequence is much larger. Those extra letters are the mRNA components. The
     generated sequence is buried in there and it is exactly 300 letters in size!
 
     Lastly, lets discuss the sequence generator itself. The sequence is created
