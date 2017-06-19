@@ -10,7 +10,7 @@ from sklearn.metrics import accuracy_score
 
 
 def main():
-    """Build, train, and test kNN."""
+    """Build, train, & test kNN. Calculate & print accuracy."""
     iris = datasets.load_iris()
     x = iris.data  # Define features.
     y = iris.target  # Define targets.
