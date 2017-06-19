@@ -15,6 +15,7 @@ var winConditions = [
 
 
 function setup() {
+    console.clear()
     createCanvas(830, 220);
     noLoop();
     rectMode(CENTER);
@@ -26,7 +27,7 @@ function setup() {
         }
         games[i] = new Board(i, x, 110, size);
         games[i].initialize();
-        console.log((i + 1) + '. ' + floor((1-games[i].blunder)*100))
+        console.log((i + 1) + '.) ' + games[i].blunder * 100)
     }
     redraw();
 }
