@@ -1,8 +1,10 @@
 # Evolution of Code
 
-### To see the program, [**right-click here and open a new tab.**](https://jsfiddle.net/qrx5kno1/)
+**Summary:** This program uses a genetic algorithm which attempts to reproduce a target phrase starting from a population of strings that have a random series characters.
 
-**Summary:** This program uses a genetic algorithm to attempt reproducing a target phrase starting from a population of strings that have an entirely random series characters.
+**Acknowledgement** - This is an attempt at the implementation of evolutionary principles described in Chapter 9 of the "The Nature of Code" by Daniel Shiffman. You can find his book at [*natureofcode.com*](http://natureofcode.com/).
+
+### To see the program, [**right-click here and open a new tab.**](https://jsfiddle.net/qrx5kno1/)
 
 **Instructions:**
 * You can click the "Breed Next Generation" button to proceed one generation at a time (Recommended).
@@ -17,6 +19,5 @@
 * **Heredity and Crossover** - Two breeders are chosen at random from the mating pool (lines 220 & 221). Their genes (or characters) are than spliced together at a randomly chosen midpoint (lines 228 to 236).
 * **Mutation** - Before the offspring is added to the next generation (line 241), each of its genes (or characters) has a chance to mutate based on the mutation rate (lines 238 & 234).
 * **Predation** - Predation is simulated by sorting the population array based on fitness (lines 253 & 254).
-
 
 ### Copyright 2017 by **Adil Iqbal**. All rights reserved.
