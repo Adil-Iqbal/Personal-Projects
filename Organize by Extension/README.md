@@ -1,5 +1,5 @@
-# Organize by Extension 
-## by Adil Iqbal
+# Organize by Extension
+Organize directory by file type. FOR WINDOWS ONLY.
 ### Installation
 * Drag and drop the Python file "obe.py" in a desired location.
 * Open the command line by typing "cmd" in the search bar of the Start Menu.
