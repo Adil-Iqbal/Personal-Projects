@@ -16,6 +16,7 @@ var winConditions = [
 
 function setup() {
     console.clear()
+    console.log("Chances to Blunder:")
     createCanvas(830, 220);
     noLoop();
     rectMode(CENTER);
@@ -27,7 +28,8 @@ function setup() {
         }
         games[i] = new Board(i, x, 110, size);
         games[i].initialize();
-        console.log((i + 1) + '.) ' + games[i].blunder * 100)
+        blunder = games[i].blunder * 100
+        console.log((i + 1) + '.) ' + blunder.toFixed(2) + "%")
     }
     redraw();
 }

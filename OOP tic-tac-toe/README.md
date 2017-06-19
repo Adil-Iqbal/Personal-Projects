@@ -1,8 +1,8 @@
 # Object Oriented Tic-Tac-Toe
 
-### You can play it by [**clicking here!**](https://jsfiddle.net/mv1vr4yc/)
+### You can play it by [**clicking here!**](https://jsfiddle.net/mv1vr4yc/1/)
 
-You can resize the panes if the game boards are going off screen. You can also hit the "Run" button in the top-left corner to play again.
+You can resize the panes of JSFiddle if the game boards are going off screen. You can also hit the "Run" button in the top-left corner to play again.
 
 The game features:
 
