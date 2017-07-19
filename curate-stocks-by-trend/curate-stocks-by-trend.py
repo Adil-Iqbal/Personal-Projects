@@ -48,7 +48,6 @@ def get_data(query):
 def analyze(name, show=False):
     """Return the name, trend, and the current price of the stock."""
     # Query the Quandl API for stock data.
-    global key
     query = "EOD/" + name
     df = get_data(query)
     # Define x and y based on stock prices.
