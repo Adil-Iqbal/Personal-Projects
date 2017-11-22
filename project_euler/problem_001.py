@@ -10,14 +10,18 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 import time
 from math import log10, floor
 
-start = time.time()
 
 def round_sig(x, sig=4):
+  """Round to significant figures."""
   return round(x, sig-int(floor(log10(abs(x))))-1)
 
+
+start = time.time()
+
+# Solution to problem.
 answer = 0
 for number in range(1000):
-  if number % 3 ==0 or number % 5 == 0:
+  if number % 3 == 0 or number % 5 == 0:
     answer += number
 
 elapsed = time.time() - start
