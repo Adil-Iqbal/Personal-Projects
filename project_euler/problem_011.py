@@ -69,42 +69,29 @@ for i, row in enumerate(grid):
 
 
 def check_south(x, y):
-  max_Y = len(grid)-1
   product = 1
   for i in range(4):
-    if (y + i) > max_Y:
-      return 0
     product *= grid[y+i][x]
   return product
 
 
 def check_east(x, y):
-  max_X = len(grid[y])-1
   product = 1
-  for i in range(1, 4):
-    if (x + i) > max_X:
-      return 0
+  for i in range(4):
     product *= grid[y][x+i]
   return product
 
 
 def check_northeast(x, y):
-  max_X = len(grid[y])-1
   product = 1
   for i in range(4):
-    if (y - i) < 0 or (x + i) > max_X:
-      return 0
     product *= grid[y-i][x+i]
   return product
 
 
 def check_southeast(x, y):
-  max_Y = len(grid)-1
-  max_X = len(grid[y])-1
   product = 1
   for i in range(4):
-    if (y + i) > max_Y or (x + i) > max_X:
-      return 0
     product *= grid[y+i][x+i]
   return product
 
@@ -114,21 +101,25 @@ for y, row in enumerate(grid):
   for x, value in enumerate(row):
     max_product_of_this_tile = 0
     
-    temp = check_south(x, y)
-    if temp > max_product_of_this_tile:
-      max_product_of_this_tile = temp
+    if y <= 16:
+      temp = check_south(x, y)
+      if temp > max_product_of_this_tile:
+        max_product_of_this_tile = temp
     
-    temp = check_east(x, y)
-    if temp > max_product_of_this_tile:
-      max_product_of_this_tile = temp
-      
-    temp = check_northeast(x, y)
-    if temp > max_product_of_this_tile:
-      max_product_of_this_tile = temp
-      
-    temp = check_southeast(x, y)
-    if temp > max_product_of_this_tile:
-      max_product_of_this_tile = temp
+    if x <= 16:
+      temp = check_east(x, y)
+      if temp > max_product_of_this_tile:
+        max_product_of_this_tile = temp
+    
+    if x <= 16 and y >= 3:
+      temp = check_northeast(x, y)
+      if temp > max_product_of_this_tile:
+        max_product_of_this_tile = temp
+    
+    if x <= 16 and y <= 16:
+      temp = check_southeast(x, y)
+      if temp > max_product_of_this_tile:
+        max_product_of_this_tile = temp
     
     if max_product_of_this_tile > answer:
       answer = max_product_of_this_tile
